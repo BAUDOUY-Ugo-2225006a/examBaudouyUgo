@@ -1,46 +1,38 @@
 package listes;
+
 public class SinglyLinkedList {
     private Node head;
 
-    public SinglyLinkedList() {
-        this.head = null;
-    }
+    public SinglyLinkedList() {}
+
     public void add(int value) {
-        if (head == null) {
-            head = new Node(value);
-        } else {
+        if (head == null) head = new Node(value);
+        else {
             Node tail = head;
-            while (tail.next != null) {
-                tail = tail.next;
-            }
+            while (tail.next != null) tail = tail.next;
             tail.next = new Node(value);
         }
     }
+
     public SinglyLinkedList reverse() {
-        SinglyLinkedList reversedList = new SinglyLinkedList();
-        Node current = head;
-        while (current != null) {
+        SinglyLinkedList reversed = new SinglyLinkedList();
+        for (Node current = head; current != null; current = current.next) {
             Node newNode = new Node(current.data);
-            newNode.next = reversedList.head;
-            reversedList.head = newNode;
-            current = current.next;
+            newNode.next = reversed.head;
+            reversed.head = newNode;
         }
-        return reversedList;
+        return reversed;
     }
+
     public void printList() {
-        Node current = head;
-        while (current != null) {
+        for (Node current = head; current != null; current = current.next)
             System.out.print(current.data + " ");
-            current = current.next;
-        }
         System.out.println();
     }
+
     private static class Node {
         int data;
         Node next;
-
-        Node(int data) {
-            this.data = data;
-        }
+        Node(int data) { this.data = data; }
     }
 }
