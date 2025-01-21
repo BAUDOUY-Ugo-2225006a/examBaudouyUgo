@@ -1,85 +1,62 @@
 package annuaire;
+
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Scanner;
 
 public class DynamicAnnuaire {
-    static Map<String, Carte> annuaireAssociative = new HashMap<>();
+    static Map<String, Carte> annuaire = new HashMap<>();
+
     public static void main(String[] args) {
-        lectureCommandeClavier();
-    }
-    public static void lectureCommandeClavier() {
         Scanner scanner = new Scanner(System.in);
-        String commande;
         while (true) {
-            System.out.println("\nTapez une commande :");
-            commande = scanner.nextLine();
-            if (commande.equals("C")) {
-                System.out.println("Quel est le nom de la personne que vous souhaitez ajouter dans l'annuaire ?");
+            System.out.println("\nCommande (C: créer, R: lire, U: MAJ, D: supprimer, L: lister, Merci: quitter) :");
+            String cmd = scanner.nextLine();
+            if (cmd.equals("C")) {
+                System.out.println("Nom :");
                 String nom = scanner.nextLine();
-                System.out.println("Quel est le numéro de téléphone de la personne?");
-                String numero = scanner.nextLine();
-                System.out.println("Quelle est son adresse ?");
+                System.out.println("Téléphone :");
+                String tel = scanner.nextLine();
+                System.out.println("Adresse :");
                 String adresse = scanner.nextLine();
-
-                Carte carte = new Carte(nom, numero, adresse);
-                annuaireAssociative.put(nom, carte);
-
-                System.out.println("Ajout de la carte réussi");
-
-            } else if (commande.equals("R")) { 
-                System.out.println("Qui recherchez vous?");
+                annuaire.put(nom, new Carte(nom, tel, adresse));
+                System.out.println("Ajouté avec succès.");
+            } else if (cmd.equals("R")) {
+                System.out.println("Rechercher le nom :");
                 String nom = scanner.nextLine();
-
-                Carte carte = annuaireAssociative.get(nom);
+                Carte carte = annuaire.get(nom);
+                System.out.println(carte != null ? carte : "Nom introuvable.");
+            } else if (cmd.equals("U")) {
+                System.out.println("Nom à mettre à jour :");
+                String nom = scanner.nextLine();
+                Carte carte = annuaire.get(nom);
                 if (carte != null) {
-                    System.out.println("Carte trouvée : " + carte);
+                    System.out.println("Nouveau téléphone :");
+                    carte.setNumero(scanner.nextLine());
+                    System.out.println("Mise à jour réussie.");
                 } else {
-                    System.out.println("Aucune carte ne correspond à ce nom...");
+                    System.out.println("Nom introuvable.");
                 }
-
-            } else if (commande.equals("U")) {
-                System.out.println("Quei voulez vous mettre à jour?");
+            } else if (cmd.equals("D")) {
+                System.out.println("Nom à supprimer :");
                 String nom = scanner.nextLine();
-
-                Carte carte = annuaireAssociative.get(nom);
-                if (carte != null) {
-                    System.out.println("Quel est son nouveau numéro de téléphone ?");
-                    String nouveauNumero = scanner.nextLine();
-                    carte.setNumero(nouveauNumero);
-
-                    System.out.println("Mise à jour du numéro de téléphone réussi");
+                if (annuaire.remove(nom) != null) {
+                    System.out.println("Supprimé avec succès.");
                 } else {
-                    System.out.println("Aucune carte ne correspond à ce nom.");
+                    System.out.println("Nom introuvable.");
                 }
-
-            } else if (commande.equals("D")) {
-                System.out.println("Qui voulez vous supprimer?");
-                String nom = scanner.nextLine();
-
-                if (annuaireAssociative.containsKey(nom)) {
-                    annuaireAssociative.remove(nom);
-                    System.out.println("Carte supprimée avec succès.");
+            } else if (cmd.equals("L")) {
+                if (annuaire.isEmpty()) {
+                    System.out.println("Annuaire vide.");
                 } else {
-                    System.out.println("Aucune carte ne correspond à ce nom.");
+                    System.out.println("Annuaire :");
+                    annuaire.values().forEach(System.out::println);
                 }
-
-            } else if (commande.equals("L")) {
-                if (annuaireAssociative.isEmpty()) {
-                    System.out.println("L'annuaire est vide.");
-                } else {
-                    System.out.println("Contenu de l'annuaire :");
-                    for (Map.Entry<String, Carte> entry : annuaireAssociative.entrySet()) {
-                        System.out.println(entry.getValue());
-                    }
-                }
-
-            } else if (commande.equals("Merci")) {
-                System.out.println("Fermeture de l'annuaire");
-                return;
-
+            } else if (cmd.equals("Merci")) {
+                System.out.println("Fermeture de l'annuaire.");
+                break;
             } else {
-                System.out.println("Veuillez affecter une autre commande");
+                System.out.println("Commande inconnue.");
             }
         }
     }
